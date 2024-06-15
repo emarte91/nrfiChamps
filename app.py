@@ -20,8 +20,8 @@ st.sidebar.success(formatted_date)
 
 
 # Read pitcher data from CSV
-file_path = 'TomorrowsPitcherData.csv'
-pitcher_data = pd.read_csv(file_path)
+file_path_url = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/TomorrowsPitcherData.csv'
+pitcher_data = pd.read_csv(file_path_url)
 
 
 # Function to get team logos
