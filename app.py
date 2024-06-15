@@ -63,7 +63,7 @@ def get_team_logo(team_name):
 
 
 # Get today's date
-tomorrow_date = datetime.now() + timedelta(days=1)
+tomorrow_date = datetime.now() + timedelta(days=0)
 formatted_date = tomorrow_date.strftime('%m/%d/%Y')
 
 # Retrieve the schedule for tomorrow
