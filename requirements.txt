@@ -1,4 +1,4 @@
-statsapi
+MLB-StatsAPI
 datetime
 pytz
 unidecode
