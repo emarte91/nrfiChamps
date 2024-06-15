@@ -213,12 +213,12 @@ for game in sched:
                         "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
                         unsafe_allow_html=True
                     )
-    if 'ERA' in away_pitcher_stats.columns and 'ERA' in home_pitcher_stats.columns:
-        if (away_pitcher_stats['ERA'].iloc[0] < 2.5) and (home_pitcher_stats['ERA'].iloc[0] < 2.5):
-            st.write(
-                "<p style='color:orange; font-size:30px; font-weight:bold;'>Bet this game!!!!!</p>",
-                unsafe_allow_html=True
-            )
+    #if 'ERA' in away_pitcher_stats.columns and 'ERA' in home_pitcher_stats.columns:
+    #    if (away_pitcher_stats['ERA'].iloc[0] < 2.5) and (home_pitcher_stats['ERA'].iloc[0] < 2.5):
+    #        st.write(
+    #            "<p style='color:orange; font-size:30px; font-weight:bold;'>Bet this game!!!!!</p>",
+    #            unsafe_allow_html=True
+    #        )
 
     # Add a divider
     st.divider()
