@@ -84,43 +84,14 @@ utc = pytz.utc
 pdt = pytz.timezone('America/Los_Angeles')
 
 
-# Function to remove accents from names
+# Function to get pitcher stats from the data
+def get_pitcher_stats(name):
+    pitcher_stats = pitcher_data[pitcher_data['Name'] == name]
+    return pitcher_stats
+
+
 def remove_accents(name):
     return unidecode(name)
-
-
-# Function to get player ID by name
-def get_player_id_by_name(name):
-    players = statsapi.get('sports_players', {'season': 2024, 'gameType': 'W'})['people']
-    player_id = next((x['id'] for x in players if unidecode(x['fullName']) == name), None)
-    return player_id
-
-
-# Function to get pitcher stats from statsapi
-def get_pitcher_stats(name):
-    player_id = get_player_id_by_name(name)
-    if player_id:
-        pitcher_season_data = statsapi.player_stats(player_id, 'pitching', 'season')
-
-        # Initialize an empty list to store data rows
-        data = []
-
-        # Split the data into lines and skip the first three lines
-        lines = pitcher_season_data.strip().split('\n')[3:]
-        for line in lines:
-            key_value = line.split(': ')
-            if len(key_value) == 2:  # Ensure it's a valid key-value pair
-                key, value = key_value
-                data.append([key.strip(), value.strip()])
-
-        # Convert the data list into a pandas DataFrame
-        pitcher_df = pd.DataFrame(data, columns=['Statistic', 'Value'])
-
-        # Filter the DataFrame to include only 'wins', 'losses', and 'era'
-        pitcher_stats = pitcher_df[pitcher_df['Statistic'].isin(['wins', 'losses', 'era'])]
-        return pitcher_stats
-
-    return pd.DataFrame()  # Return an empty DataFrame if player_id is not found
 
 
 # Iterate over each game and create individual tables
@@ -136,7 +107,6 @@ for game in sched:
     away_pitcher = game['away_probable_pitcher']
     home_team = game['home_name']
     home_pitcher = game['home_probable_pitcher']
-
 
     # Create a DataFrame for the current game
     game_df = pd.DataFrame({
@@ -210,7 +180,7 @@ for game in sched:
 
             # Check ERA and display styled message based on conditions
             if 'ERA' in away_pitcher_stats.columns:
-                era = float(away_pitcher_stats[away_pitcher_stats['Statistic'] == 'era']['Value'].values[0])
+                era = away_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
                         "<p style='color:red; font-weight:bold;'>High risk</p>",
@@ -218,7 +188,7 @@ for game in sched:
                     )
                 elif era < 2.5:
                     st.write(
-                        "<p style='color:green; font-weight:bold;'>Safe</p>",
+                        "<p style='color:green; font-weight:bold;'>Bet</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
@@ -235,7 +205,7 @@ for game in sched:
 
             # Check ERA and display styled message based on conditions
             if 'ERA' in home_pitcher_stats.columns:
-                era = float(home_pitcher_stats[home_pitcher_stats['Statistic'] == 'era']['Value'].values[0])
+                era = home_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
                         "<p style='color:red; font-weight:bold;'>High risk</p>",
@@ -251,6 +221,12 @@ for game in sched:
                         "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
                         unsafe_allow_html=True
                     )
+    #if 'ERA' in away_pitcher_stats.columns and 'ERA' in home_pitcher_stats.columns:
+    #    if (away_pitcher_stats['ERA'].iloc[0] < 2.5) and (home_pitcher_stats['ERA'].iloc[0] < 2.5):
+    #        st.write(
+    #            "<p style='color:orange; font-size:30px; font-weight:bold;'>Bet this game!!!!!</p>",
+    #            unsafe_allow_html=True
+    #        )
 
     # Add a divider
     st.divider()
