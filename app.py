@@ -63,7 +63,15 @@ def get_team_logo(team_name):
 
 
 # Get today's date
-tomorrow_date = datetime.now() + timedelta(days=0)
+
+current_time = datetime.now().time()
+start_time = datetime.strptime("20:00", "%H:%M").time()
+end_time = datetime.strptime("23:59", "%H:%M").time()
+if start_time <= current_time <= end_time:
+    x = 1
+else:
+    x = 0
+tomorrow_date = datetime.now() + timedelta(days=int(x))
 formatted_date = tomorrow_date.strftime('%m/%d/%Y')
 
 # Retrieve the schedule for tomorrow
@@ -183,7 +191,7 @@ for game in sched:
                         "<p style='color:green; font-weight:bold;'>Bet</p>",
                         unsafe_allow_html=True
                     )
-                elif 2.6 <= era <= 4.4:
+                elif 2.5 <= era <= 4.4:
                     st.write(
                         "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
                         unsafe_allow_html=True
@@ -208,7 +216,7 @@ for game in sched:
                         "<p style='color:green; font-weight:bold;'>Safe</p>",
                         unsafe_allow_html=True
                     )
-                elif 2.6 <= era <= 4.4:
+                elif 2.5 <= era <= 4.4:
                     st.write(
                         "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
                         unsafe_allow_html=True
