@@ -71,7 +71,7 @@ if start_time <= current_time <= end_time:
     x = 1
 else:
     x = 0
-tomorrow_date = datetime.now() + timedelta(days=int(1))
+tomorrow_date = datetime.now() + timedelta(days=int(x))
 formatted_date = tomorrow_date.strftime('%m/%d/%Y')
 
 # Retrieve the schedule for tomorrow
