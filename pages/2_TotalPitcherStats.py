@@ -34,9 +34,12 @@ def get_pitcher_stats(pitcher_name):
         # Filter the DataFrame to include only 'wins', 'losses', and 'era'
         pitcher_stats = pitcher_df[pitcher_df['Statistic'].isin(['wins', 'losses', 'era'])]
 
+        # Transpose the DataFrame for horizontal display
+        pitcher_stats_transposed = pitcher_stats.set_index('Statistic').T
+
         # Display the pitcher's name and statistics
         st.write(f"### Pitcher: {pitcher_name}")
-        st.table(pitcher_stats)
+        st.dataframe(pitcher_stats_transposed)
     else:
         st.write(f"No player found with the name: {pitcher_name}")
 
