@@ -60,7 +60,7 @@ def display_pitchers_stats(file_path):
             st.divider()
 
 # Path to the CSV file
-file_path = 'TommorowsPitcher.csv'
+file_path = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/TommorowsPitcher.csv'
 
 # Display pitcher statistics
 display_pitchers_stats(file_path)
