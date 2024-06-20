@@ -71,7 +71,7 @@ if start_time <= current_time <= end_time:
     x = 1
 else:
     x = 0
-tomorrow_date = datetime.now() + timedelta(days=int(x))
+tomorrow_date = datetime.now() + timedelta(days=int(1))
 formatted_date = tomorrow_date.strftime('%m/%d/%Y')
 
 # Retrieve the schedule for tomorrow
@@ -213,7 +213,7 @@ for game in sched:
                     )
                 elif era < 2.5:
                     st.write(
-                        "<p style='color:green; font-weight:bold;'>Safe</p>",
+                        "<p style='color:green; font-weight:bold;'>Bet</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
