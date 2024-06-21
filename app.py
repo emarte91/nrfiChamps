@@ -26,6 +26,9 @@ pitcher_data = pd.read_csv(file_path_url)
 batting_data_path = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/mlb_team_batting_averages.csv'
 batting_data = pd.read_csv(batting_data_path)
 
+pitcher_total_path = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/PitchersTotalStatistics.csv'
+pitcher_total_data = pd.read_csv(pitcher_total_path)
+
 
 # Function to get team logos
 def get_team_logo(team_name):
@@ -118,6 +121,9 @@ for game in sched:
     # Fetch team ranks from CSV
     away_team_rank = batting_data.loc[batting_data['Team'] == away_team, 'Rank'].iloc[0]
     home_team_rank = batting_data.loc[batting_data['Team'] == home_team, 'Rank'].iloc[0]
+
+    away_pitcher_total = pitcher_total_data[pitcher_total_data['PitcherName'] == away_pitcher]
+    home_pitcher_total = pitcher_total_data[pitcher_total_data['PitcherName'] == home_pitcher]
 
     # Create a DataFrame for the current game
     game_df = pd.DataFrame({
@@ -217,6 +223,8 @@ for game in sched:
         away_pitcher_stats = get_pitcher_stats(away_pitcher)
         if not away_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
+            st.text(f"#### {away_pitcher} Total Stats ####")
+            st.write(away_pitcher_total.to_html(classes=["custom-table2"], index=False), unsafe_allow_html=True)
             st.write(away_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
             if not away_batting_data.empty:
                 # This is where it displays the data results
@@ -224,22 +232,23 @@ for game in sched:
                 st.write(away_batting_data.to_html(classes=["custom-table1"], index=False), unsafe_allow_html=True)
 
 
+
             # Check ERA and display styled message based on conditions
             if 'ERA' in away_pitcher_stats.columns:
                 era = away_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
-                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over +0.5 Bottom Inning----------</p>",
+                        f"<p style='color:red; font-weight:bold;'>--------------------High Risk: Bet Over +0.5 Bottom Inning---------------------</p>",
                         unsafe_allow_html=True
                     )
                 elif era < 2.5:
                     st.write(
-                        f"<p style='color:green; font-weight:bold;'>----------Safe Bet: Under -0.5 Bottom Inning----------</p>",
+                        f"<p style='color:green; font-weight:bold;'>--------------------Safe Bet: Under -0.5 Bottom Inning-----------------------</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
                     st.write(
-                        "<p style='color:blue; font-weight:bold;'>----------Medium Risk Coin flip----------</p>",
+                        "<p style='color:blue; font-weight:bold;'>--------------------Medium Risk Coin flip-----------------------</p>",
                         unsafe_allow_html=True
                     )
 
@@ -247,6 +256,8 @@ for game in sched:
         home_pitcher_stats = get_pitcher_stats(home_pitcher)
         if not home_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
+            st.text(f"#### {home_pitcher} Total Stats ####")
+            st.write(home_pitcher_total.to_html(classes=["custom-table2"], index=False), unsafe_allow_html=True)
             st.write(home_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
             if not home_batting_data.empty:
                 # This is where it displays the data results
@@ -258,17 +269,17 @@ for game in sched:
                 era = home_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
-                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over +0.5 Top Inning----------</p>",
+                        f"<p style='color:red; font-weight:bold;'>--------------------High Risk: Bet Over +0.5 Top Inning--------------------</p>",
                         unsafe_allow_html=True
                     )
                 elif era < 2.5:
                     st.write(
-                        f"<p style='color:green; font-weight:bold;'>---------- Safe Bet: Under -0.5 Top Inning----------</p>",
+                        f"<p style='color:green; font-weight:bold;'>-------------------- Safe Bet: Under -0.5 Top Inning--------------------</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
                     st.write(
-                        "<p style='color:blue; font-weight:bold;'>----------Medium Risk Coin Flip----------</p>",
+                        "<p style='color:blue; font-weight:bold;'>--------------------Medium Risk Coin Flip--------------------</p>",
                         unsafe_allow_html=True
                     )
 
