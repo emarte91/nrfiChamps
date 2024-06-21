@@ -66,7 +66,7 @@ def get_team_logo(team_name):
 
 # Get today's date
 current_time = datetime.now().time()
-start_time = datetime.strptime("21:00", "%H:%M").time()
+start_time = datetime.strptime("18:00", "%H:%M").time()
 end_time = datetime.strptime("23:59", "%H:%M").time()
 if start_time <= current_time <= end_time:
     x = 1
@@ -157,7 +157,6 @@ for game in sched:
     # Displays Game data
     st.dataframe(game_df)
 
-    # Display batting stats
 
     # Custom CSS for highlighting columns
     highlight_css = """
@@ -185,7 +184,7 @@ for game in sched:
         .custom-table1 th:nth-child(17), .custom-table1 td:nth-child(17) {
             background-color: #f59b00; /* Orange background for 'OPS' column */
         }
-        .custom-table1 th:nth-child(13), .custom-table1 td:nth-child(13) {
+        .custom-table1 th:nth-child(14), .custom-table1 td:nth-child(14) {
             background-color: #ffff66; /* Yellow background for 'AVG' column */
         }
         .custom-table1 th:nth-child(1), .custom-table1 td:nth-child(1) {
@@ -274,12 +273,16 @@ for game in sched:
                     )
 
     if not away_pitcher_stats.empty and not home_pitcher_stats.empty:
-        if (away_pitcher_stats['ERA'].iloc[0] >= 4.5) and (home_pitcher_stats['ERA'].iloc[0] >= 4.5) and away_team_rank < 25 and home_team_rank < 25:
-            st.write("<p style='color:orange; font-weight:bold;'>----------Both Teams Have Terrible Pitchers: Bet YRFI 1st Inning----------</p>",
-                     unsafe_allow_html=True)
-        elif (away_pitcher_stats['ERA'].iloc[0] <= 2.5) and (home_pitcher_stats['ERA'].iloc[0] <= 2.5) and away_team_rank > 4 and home_team_rank > 4:
-            st.write("<p style='color:purple; font-weight:bold;'>----------Both Teams Have Great Pitchers: Bet NRFI 1st Inning----------</p>",
-                     unsafe_allow_html=True)
+        if (away_pitcher_stats['ERA'].iloc[0] >= 4.5) and (
+                home_pitcher_stats['ERA'].iloc[0] >= 4.5) and away_team_rank < 25 and home_team_rank < 25:
+            st.write(
+                "<p style='color:orange; font-weight:bold;'>----------Both Teams Have Terrible Pitchers: Bet YRFI 1st Inning----------</p>",
+                unsafe_allow_html=True)
+        elif (away_pitcher_stats['ERA'].iloc[0] <= 2.5) and (
+                home_pitcher_stats['ERA'].iloc[0] <= 2.5) and away_team_rank > 4 and home_team_rank > 4:
+            st.write(
+                "<p style='color:purple; font-weight:bold;'>----------Both Teams Have Great Pitchers: Bet NRFI 1st Inning----------</p>",
+                unsafe_allow_html=True)
 
     # Add a divider
     st.divider()
