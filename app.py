@@ -256,7 +256,7 @@ for game in sched:
         home_pitcher_stats = get_pitcher_stats(home_pitcher)
         if not home_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
-            st.text(f"#### {home_pitcher} Total Stats ####")
+            st.text(f"######## {home_pitcher} Total Stats ############################")
             st.write(home_pitcher_total.to_html(classes=["custom-table2"], index=False), unsafe_allow_html=True)
             st.write(home_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
             if not home_batting_data.empty:
