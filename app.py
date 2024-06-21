@@ -273,12 +273,13 @@ for game in sched:
                         unsafe_allow_html=True
                     )
 
-    if (away_pitcher_stats['ERA'].iloc[0] <= 2.5) and (home_pitcher_stats['ERA'].iloc[0] <= 2.5) and away_team_rank > 4 and home_team_rank > 4:
-        st.write("<p style='color:purple; font-weight:bold;'>----------Both Teams Have Great Pitchers: Bet NRFI 1st Inning----------</p>",
-                 unsafe_allow_html=True)
-    elif (away_pitcher_stats['ERA'].iloc[0] >= 4.5) and (home_pitcher_stats['ERA'].iloc[0] >= 4.5) and away_team_rank < 25 and home_team_rank < 25:
-        st.write("<p style='color:orange; font-weight:bold;'>----------Both Teams Have Terrible Pitchers: Bet YRFI 1st Inning----------</p>",
-                 unsafe_allow_html=True)
+    if not away_pitcher_stats.empty and not home_pitcher_stats.empty:
+        if (away_pitcher_stats['ERA'].iloc[0] >= 4.5) and (home_pitcher_stats['ERA'].iloc[0] >= 4.5) and away_team_rank < 25 and home_team_rank < 25:
+            st.write("<p style='color:orange; font-weight:bold;'>----------Both Teams Have Terrible Pitchers: Bet YRFI 1st Inning----------</p>",
+                     unsafe_allow_html=True)
+        elif (away_pitcher_stats['ERA'].iloc[0] <= 2.5) and (home_pitcher_stats['ERA'].iloc[0] <= 2.5) and away_team_rank > 4 and home_team_rank > 4:
+            st.write("<p style='color:purple; font-weight:bold;'>----------Both Teams Have Great Pitchers: Bet NRFI 1st Inning----------</p>",
+                     unsafe_allow_html=True)
 
     # Add a divider
     st.divider()
