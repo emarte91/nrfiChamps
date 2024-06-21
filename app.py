@@ -198,12 +198,12 @@ for game in sched:
             era = pitcher_stats['ERA'].iloc[0]
             if era >= 4.5:
                 st.write(
-                    f"<p style='color:red; font-weight:bold;'>----------High risk Bet YRFI {team_name} or Over 0.5----------</p>",
+                    f"<p style='color:red; font-weight:bold;'>----------High risk Bet YRFI {team_name} or Over +0.5----------</p>",
                     unsafe_allow_html=True
                 )
             elif era < 2.5:
                 st.write(
-                    f"<p style='color:green; font-weight:bold;'>----------Bet NRFI {team_name} or Under 0.5----------</p>",
+                    f"<p style='color:green; font-weight:bold;'>----------Bet NRFI {team_name} or Under -0.5----------</p>",
                     unsafe_allow_html=True
                 )
             elif 2.5 <= era <= 4.4:
@@ -229,12 +229,12 @@ for game in sched:
                 era = away_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
-                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over 0.5 Bottom Inning----------</p>",
+                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over +0.5 Bottom Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif era < 2.5:
                     st.write(
-                        f"<p style='color:green; font-weight:bold;'>----------Safe Bet: Under 0.5 Bottom Inning----------</p>",
+                        f"<p style='color:green; font-weight:bold;'>----------Safe Bet: Under -0.5 Bottom Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
