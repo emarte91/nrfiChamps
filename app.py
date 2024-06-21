@@ -301,5 +301,4 @@ for game in sched:
     # Add a divider
     st.divider()
     st.divider()
-    st.divider()
 
