@@ -6,7 +6,7 @@ import pandas as pd
 from unidecode import unidecode
 
 st.set_page_config(
-    page_title="Pitcher Stats",
+    page_title="NRFI Champs",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -18,10 +18,13 @@ formatted_date = today_date.strftime('%m/%d')
 st.sidebar.header(':blue[nrfi]Champs', divider='rainbow')
 st.sidebar.success(formatted_date)
 
-
 # Read pitcher data from CSV
 file_path_url = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/TomorrowsPitcherData.csv'
 pitcher_data = pd.read_csv(file_path_url)
+
+# Read MLB team batting average data from CSV
+batting_data_path = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/mlb_team_batting_averages.csv'
+batting_data = pd.read_csv(batting_data_path)
 
 
 # Function to get team logos
@@ -61,9 +64,7 @@ def get_team_logo(team_name):
     return team_logos.get(team_name, None)
 
 
-
 # Get today's date
-
 current_time = datetime.now().time()
 start_time = datetime.strptime("21:00", "%H:%M").time()
 end_time = datetime.strptime("23:59", "%H:%M").time()
@@ -94,7 +95,9 @@ def remove_accents(name):
     return unidecode(name)
 
 
+
 # Iterate over each game and create individual tables
+
 for game in sched:
     # Convert UTC datetime to PDT
     game_datetime_utc = datetime.strptime(game['game_datetime'], '%Y-%m-%dT%H:%M:%SZ')
@@ -107,6 +110,14 @@ for game in sched:
     away_pitcher = game['away_probable_pitcher']
     home_team = game['home_name']
     home_pitcher = game['home_probable_pitcher']
+
+    # Get batting data for away and home teams
+    away_batting_data = batting_data[batting_data['Team'] == away_team]
+    home_batting_data = batting_data[batting_data['Team'] == home_team]
+
+    # Fetch team ranks from CSV
+    away_team_rank = batting_data.loc[batting_data['Team'] == away_team, 'Rank'].iloc[0]
+    home_team_rank = batting_data.loc[batting_data['Team'] == home_team, 'Rank'].iloc[0]
 
     # Create a DataFrame for the current game
     game_df = pd.DataFrame({
@@ -131,45 +142,76 @@ for game in sched:
     home_logo = get_team_logo(home_team)
 
     # Define column layout for logos and team names
-    col1, col2, col3, col4 = st.columns([1, 2, 1, 2])  # Adjust column widths as needed
+    col1, col2, col3, col4 = st.columns([1, 2, 1, 2])
 
     # Display home team with logo if available
     with col1:
-        if home_logo:
-            st.image(away_logo, width=100)  # Adjust width as needed
+        if away_logo:
+            st.image(away_logo, width=100)
 
     # Display away team with logo if available
     with col2:
-        if away_logo:
-            st.image(home_logo, width=100)  # Adjust width as needed
+        if home_logo:
+            st.image(home_logo, width=100)
 
-
+    # Displays Game data
     st.dataframe(game_df)
 
+    # Display batting stats
+
+    # Custom CSS for highlighting columns
     highlight_css = """
-    <style>
-    .custom-table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid #ccc;
-        font-size: 14px;
-    }
-    .custom-table th, .custom-table td {
-        padding: 8px;
-        text-align: center;
-        border: 1px solid #ccc;
-    }
-    .custom-table th:nth-child(3), .custom-table td:nth-child(3) {
-    background-color: #42f58d; /* Yellow background for 'G' column */
-    }
-    .custom-table th:nth-child(10), .custom-table td:nth-child(10) {
-    background-color: #f59b00; /* Yellow background for 'HR' column */
-    }  
-    .custom-table th:nth-child(9), .custom-table td:nth-child(9) {
-        background-color: #ffff66; /* Yellow background for 'R' column */
-    }
-    </style>
-    """
+        <style>
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .custom-table th, .custom-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        .custom-table th:nth-child(3), .custom-table td:nth-child(3) {
+        background-color: #42f58d; /* Green background for 'G' column */
+        }
+        .custom-table th:nth-child(10), .custom-table td:nth-child(10) {
+        background-color: #f59b00; /* Orange background for 'HR' column */
+        }  
+        .custom-table th:nth-child(9), .custom-table td:nth-child(9) {
+            background-color: #ffff66; /* Yellow background for 'R' column */
+        }
+        .custom-table1 th:nth-child(17), .custom-table1 td:nth-child(17) {
+            background-color: #f59b00; /* Orange background for 'OPS' column */
+        }
+        .custom-table1 th:nth-child(13), .custom-table1 td:nth-child(13) {
+            background-color: #ffff66; /* Yellow background for 'AVG' column */
+        }
+        .custom-table1 th:nth-child(1), .custom-table1 td:nth-child(1) {
+            background-color: #42f58d; /* Green background for 'Rank' column */
+        </style>
+        """
+
+
+    def check_era_and_display(pitcher_stats, team_name):
+        if 'ERA' in pitcher_stats.columns:
+            era = pitcher_stats['ERA'].iloc[0]
+            if era >= 4.5:
+                st.write(
+                    f"<p style='color:red; font-weight:bold;'>----------High risk Bet YRFI {team_name} or Over 0.5----------</p>",
+                    unsafe_allow_html=True
+                )
+            elif era < 2.5:
+                st.write(
+                    f"<p style='color:green; font-weight:bold;'>----------Bet NRFI {team_name} or Under 0.5----------</p>",
+                    unsafe_allow_html=True
+                )
+            elif 2.5 <= era <= 4.4:
+                st.write(
+                    "<p style='color:blue; font-weight:bold;'>----------Medium Risk Coin flip----------</p>",
+                    unsafe_allow_html=True
+                )
 
     # Display away pitcher stats
     if away_pitcher:
@@ -177,23 +219,28 @@ for game in sched:
         if not away_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
             st.write(away_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
+            if not away_batting_data.empty:
+                # This is where it displays the data results
+                st.text(f"#### {away_team} 1st Inning Batting Stats")
+                st.write(away_batting_data.to_html(classes=["custom-table1"], index=False), unsafe_allow_html=True)
+
 
             # Check ERA and display styled message based on conditions
             if 'ERA' in away_pitcher_stats.columns:
                 era = away_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
-                        "<p style='color:red; font-weight:bold;'>High risk</p>",
+                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over 0.5 Bottom Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif era < 2.5:
                     st.write(
-                        "<p style='color:green; font-weight:bold;'>Bet</p>",
+                        f"<p style='color:green; font-weight:bold;'>----------Safe Bet: Under 0.5 Bottom Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
                     st.write(
-                        "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
+                        "<p style='color:blue; font-weight:bold;'>----------Medium Risk Coin flip----------</p>",
                         unsafe_allow_html=True
                     )
 
@@ -202,31 +249,37 @@ for game in sched:
         if not home_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
             st.write(home_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
+            if not home_batting_data.empty:
+                # This is where it displays the data results
+                st.text(f"#### {home_team} 1st Inning Batting Stats")
+                st.write(home_batting_data.to_html(classes=["custom-table1"], index=False), unsafe_allow_html=True)
 
             # Check ERA and display styled message based on conditions
             if 'ERA' in home_pitcher_stats.columns:
                 era = home_pitcher_stats['ERA'].iloc[0]
                 if era >= 4.5:
                     st.write(
-                        "<p style='color:red; font-weight:bold;'>High risk</p>",
+                        f"<p style='color:red; font-weight:bold;'>----------High Risk: Bet Over 0.5 Top Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif era < 2.5:
                     st.write(
-                        "<p style='color:green; font-weight:bold;'>Bet</p>",
+                        f"<p style='color:green; font-weight:bold;'>---------- Safe Bet: Under 0.5 Top Inning----------</p>",
                         unsafe_allow_html=True
                     )
                 elif 2.5 <= era <= 4.4:
                     st.write(
-                        "<p style='color:blue; font-weight:bold;'>Medium risk</p>",
+                        "<p style='color:blue; font-weight:bold;'>----------Medium Risk Coin Flip----------</p>",
                         unsafe_allow_html=True
                     )
-    #if 'ERA' in away_pitcher_stats.columns and 'ERA' in home_pitcher_stats.columns:
-    #    if (away_pitcher_stats['ERA'].iloc[0] < 2.5) and (home_pitcher_stats['ERA'].iloc[0] < 2.5):
-    #        st.write(
-    #            "<p style='color:orange; font-size:30px; font-weight:bold;'>Bet this game!!!!!</p>",
-    #            unsafe_allow_html=True
-    #        )
+
+    if (away_pitcher_stats['ERA'].iloc[0] <= 2.5) and (home_pitcher_stats['ERA'].iloc[0] <= 2.5) and away_team_rank > 4 and home_team_rank > 4:
+        st.write("<p style='color:purple; font-weight:bold;'>----------Both Teams Have Great Pitchers: Bet NRFI 1st Inning----------</p>",
+                 unsafe_allow_html=True)
+    elif (away_pitcher_stats['ERA'].iloc[0] >= 4.5) and (home_pitcher_stats['ERA'].iloc[0] >= 4.5) and away_team_rank < 25 and home_team_rank < 25:
+        st.write("<p style='color:orange; font-weight:bold;'>----------Both Teams Have Terrible Pitchers: Bet YRFI 1st Inning----------</p>",
+                 unsafe_allow_html=True)
 
     # Add a divider
     st.divider()
+
