@@ -241,22 +241,25 @@ for game in sched:
                         f"<p style='color:red; font-weight:bold;'>--------------------High Risk: Bet Over +0.5 Bottom Inning---------------------</p>",
                         unsafe_allow_html=True
                     )
+                    st.divider()
                 elif era < 2.5:
                     st.write(
                         f"<p style='color:green; font-weight:bold;'>--------------------Safe Bet: Under -0.5 Bottom Inning-----------------------</p>",
                         unsafe_allow_html=True
                     )
+                    st.divider()
                 elif 2.5 <= era <= 4.4:
                     st.write(
                         "<p style='color:blue; font-weight:bold;'>--------------------Medium Risk Coin flip-----------------------</p>",
                         unsafe_allow_html=True
                     )
+                    st.divider()
 
     if home_pitcher:
         home_pitcher_stats = get_pitcher_stats(home_pitcher)
         if not home_pitcher_stats.empty:
             st.write(highlight_css, unsafe_allow_html=True)
-            st.text(f"######## {home_pitcher} Total Stats ############################")
+            st.text(f"######## {home_pitcher} Total Stats")
             st.write(home_pitcher_total.to_html(classes=["custom-table2"], index=False), unsafe_allow_html=True)
             st.write(home_pitcher_stats.to_html(classes=["custom-table"], index=False), unsafe_allow_html=True)
             if not home_batting_data.empty:
@@ -296,5 +299,7 @@ for game in sched:
                 unsafe_allow_html=True)
 
     # Add a divider
+    st.divider()
+    st.divider()
     st.divider()
 
