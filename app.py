@@ -69,7 +69,7 @@ def get_team_logo(team_name):
 
 # Get today's date
 current_time = datetime.now().time()
-start_time = datetime.strptime("18:00", "%H:%M").time()
+start_time = datetime.strptime("22:00", "%H:%M").time()
 end_time = datetime.strptime("23:59", "%H:%M").time()
 if start_time <= current_time <= end_time:
     x = 1
