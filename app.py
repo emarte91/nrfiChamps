@@ -26,7 +26,7 @@ pitcher_data = pd.read_csv(file_path_url)
 batting_data_path = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/mlb_team_batting_averages.csv'
 batting_data = pd.read_csv(batting_data_path)
 
-pitcher_total_path = ''
+pitcher_total_path = 'pitchertotalstatistics.csv'
 pitcher_total_data = pd.read_csv(pitcher_total_path)
 
 
