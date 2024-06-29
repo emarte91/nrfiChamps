@@ -19,7 +19,7 @@ st.sidebar.header(':blue[nrfi]Champs', divider='rainbow')
 st.sidebar.success(formatted_date)
 
 # Read pitcher data from CSV
-file_path_url = 'TomorrowsPitcherData.csv'
+file_path_url = 'https://raw.githubusercontent.com/emarte91/nrfiChamps/master/PitchersTotalStatistics.csv'
 pitcher_data = pd.read_csv(file_path_url)
 
 # Read MLB team batting average data from CSV
