@@ -119,8 +119,8 @@ for game in sched:
     home_batting_data = batting_data[batting_data['Team'] == home_team]
 
     # Fetch team ranks from CSV
-    away_team_rank = batting_data.loc[batting_data['Team'] == away_team, 'Rank'].iloc[0]
-    home_team_rank = batting_data.loc[batting_data['Team'] == home_team, 'Rank'].iloc[0]
+    #away_team_rank = batting_data.loc[batting_data['Team'] == away_team, 'Rank'].iloc[0]
+    #home_team_rank = batting_data.loc[batting_data['Team'] == home_team, 'Rank'].iloc[0]
 
     away_pitcher_total = pitcher_total_data[pitcher_total_data['PitcherName'] == away_pitcher]
     home_pitcher_total = pitcher_total_data[pitcher_total_data['PitcherName'] == home_pitcher]
